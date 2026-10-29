@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>StreamSight | OTT Viewer Analytics</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="side">
+      <div class="brand">
+        <div class="logo">▶</div>
+        StreamSight
+      </div>
+
+      <div class="mutedlabel">ANALYTICS WORKSPACE</div>
+
+      <nav class="nav">
+        <button class="active" data-page="overview">▦ &nbsp; Overview</button>
+        <button data-page="dataset">▤ &nbsp; Dataset & Method</button>
+        <button data-page="performance">◉ &nbsp; Model Performance</button>
+        <button data-page="matrix">▦ &nbsp; Confusion Matrix</button>
+        <button data-page="features">↗ &nbsp; Feature Importance</button>
+        <button data-page="business">✦ &nbsp; Business Insights</button>
+        <button data-page="demo">⌁ &nbsp; Prediction Demo</button>
+      </nav>
+
+      <div class="sidebox">
+        <b>DMBI · CA 2 MINI PROJECT</b><br>
+        Predicting Viewer Drop-Off in OTT Streaming Platforms Using Data Mining<br><br>
+        Decision Tree · Python · Scikit-learn
+      </div>
+    </aside>
+
+    <!-- ========== MAIN ========== -->
+    <main class="main">
+
+      <header class="top">
+        <div>
+          <div class="eyebrow">OTT VIEWER ANALYTICS / CA 2</div>
+          <h1>Viewer Drop-Off Dashboard</h1>
+          <div class="sub">Explore the model results, discover key signals, and understand viewer-retention patterns.</div>
+        </div>
+        <div class="status"><span class="green">●</span> &nbsp; Evaluation complete</div>
+      </header>
+
+      <!-- ========== OVERVIEW ========== -->
+      <section id="overview" class="section active">
+        <div class="head">
+          <div>
+            <h2>Project overview</h2>
+            <p>Visual summary of your trained Decision Tree model.</p>
+          </div>
+          <button class="btn" onclick="go('performance')">Explore results →</button>
+        </div>
+
+        <div class="grid kpis">
+          <div class="card">
+            <div class="klabel">Model accuracy <span class="icon">◎</span></div>
+            <div class="value">92.43%</div>
+            <div class="hint">Overall correct classification</div>
+          </div>
+          <div class="card">
+            <div class="klabel">Drop-off recall <span class="icon">↗</span></div>
+            <div class="value">95.21%</div>
+            <div class="hint">Actual drop-offs identified</div>
+          </div>
+          <div class="card">
+            <div class="klabel">Drop-off precision <span class="icon">◉</span></div>
+            <div class="value">66.74%</div>
+            <div class="hint">Some false-positive alerts</div>
+          </div>
+          <div class="card">
+            <div class="klabel">Test records <span class="icon">▤</span></div>
+            <div class="value">6,635</div>
+            <div class="hint">Held-out evaluation records</div>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="title">Model performance at a glance</div>
+            <div class="desc">Percentage scores from the CA2 notebook</div>
+            <div class="chart"><canvas id="metrics"></canvas></div>
+            <div class="legend">
+              <span><i class="swatch" style="background:#7162f5"></i>Evaluation score</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="title">Test-set class distribution</div>
+            <div class="desc">Actual labels in the 6,635 test records</div>
+            <div class="chart"><canvas id="classes"></canvas></div>
+            <div class="legend">
+              <span><i class="swatch" style="background:#7162f5"></i>Retained: 5,674</span>
+              <span><i class="swatch" style="background:#23b8b5"></i>Dropped off: 961</span>
+            </div>
+            <p class="small">The test set contains more retained than dropped-off records, so recall, precision and F1-score are useful alongside accuracy.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== DATASET ========== -->
+      <section id="dataset" class="section">
+        <div class="head">
+          <div>
+            <h2>Dataset & methodology</h2>
+            <p>How the notebook prepares data before training.</p>
+          </div>
+        </div>
+
+        <div class="grid kpis">
+          <div class="card">
+            <div class="klabel">Training records</div>
+            <div class="value">26,536</div>
+            <div class="hint">Used to fit the model</div>
+          </div>
+          <div class="card">
+            <div class="klabel">Testing records</div>
+            <div class="value">6,635</div>
+            <div class="hint">Used for evaluation</div>
+          </div>
+          <div class="card">
+            <div class="klabel">Split ratio</div>
+            <div class="value">80 : 20</div>
+            <div class="hint">Train / test</div>
+          </div>
+          <div class="card">
+            <div class="klabel">Target classes</div>
+            <div class="value">2</div>
+            <div class="hint">Retained / Dropped Off</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="title">Data preparation workflow</div>
+
+          <div class="grid features" style="margin-top:16px">
+            <div class="fcard">
+              <div class="rank">STEP 01</div>
+              <h3>Inspect the dataset</h3>
+              <p>Review columns, data types, missing values and target distribution.</p>
+            </div>
+            <div class="fcard">
+              <div class="rank">STEP 02</div>
+              <h3>Check target leakage</h3>
+              <p>Exclude identifiers and columns that could reveal the target label.</p>
+            </div>
+            <div class="fcard">
+              <div class="rank">STEP 03</div>
+              <h3>Preprocess features</h3>
+              <p>Median imputation for numeric data; most-frequent imputation and one-hot encoding for categories.</p>
+            </div>
+          </div>
+
+          <div class="note" style="margin-top:17px">
+            <b>Target:</b> <code>drop_off</code> &nbsp; | &nbsp; 0 = Retained &nbsp; | &nbsp; 1 = Dropped Off<br>
+            Train-test split uses <code>random_state=42</code> and stratification. The pipeline keeps preprocessing together with the classifier.
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== MODEL PERFORMANCE ========== -->
+      <section id="performance" class="section">
+        <div class="head">
+          <div>
+            <h2>Model performance</h2>
+            <p>Decision Tree classifier evaluated on unseen test records.</p>
+          </div>
+          <button class="btn" onclick="go('matrix')">View confusion matrix →</button>
+        </div>
+
+        <div class="card">
+          <div class="title">Evaluation metrics</div>
+          <div class="desc">Precision, recall and F1-score refer to the Dropped Off class.</div>
+          <div class="chart" style="height:310px"><canvas id="performance"></canvas></div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <table class="table">
+            <tr>
+              <th>Metric</th>
+              <th>Result</th>
+              <th>Interpretation</th>
+            </tr>
+            <tr>
+              <td>Accuracy</td>
+              <td><span class="pill">92.43%</span></td>
+              <td>All test records classified correctly.</td>
+            </tr>
+            <tr>
+              <td>Drop-off precision</td>
+              <td>66.74%</td>
+              <td>Share of predicted drop-offs that were truly drop-offs.</td>
+            </tr>
+            <tr>
+              <td>Drop-off recall</td>
+              <td><span class="pill">95.21%</span></td>
+              <td>Share of actual drop-offs identified.</td>
+            </tr>
+            <tr>
+              <td>Drop-off F1-score</td>
+              <td>78.47%</td>
+              <td>Balance between precision and recall.</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="note" style="margin-top:16px">
+          <b>Interpretation:</b> High recall means the model identifies most actual drop-off cases. Lower precision means some retained viewers are incorrectly flagged. Predictions should be treated as signals for review, not certain outcomes.
+        </div>
+      </section>
+
+      <!-- ========== CONFUSION MATRIX ========== -->
+      <section id="matrix" class="section">
+        <div class="head">
+          <div>
+            <h2>Confusion matrix</h2>
+            <p>Rows show actual classes; columns show predicted classes.</p>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="title">Decision Tree predictions</div>
+            <div class="desc">Test-set results</div>
+            <div class="matrix">
+              <div class="cell dark"><strong>5,218</strong><span>Retained → Retained</span></div>
+              <div class="cell"><strong>456</strong><span>Retained → Drop-off</span></div>
+              <div class="cell"><strong>46</strong><span>Drop-off → Retained</span></div>
+              <div class="cell dark"><strong>915</strong><span>Drop-off → Drop-off</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="title">What does it mean?</div>
+            <p class="small"><b>5,218</b> retained viewers were correctly classified.</p>
+            <p class="small"><b>915</b> drop-off cases were correctly identified.</p>
+            <p class="small"><b>456</b> retained viewers were incorrectly flagged as drop-off.</p>
+            <p class="small"><b>46</b> actual drop-off cases were missed.</p>
+            <div class="note">The model found 915 of 961 actual drop-off cases, but also generated false-positive alerts for 456 retained records.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== FEATURE IMPORTANCE ========== -->
+      <section id="features" class="section">
+        <div class="head">
+          <div>
+            <h2>Feature importance</h2>
+            <p>Features used most by this trained Decision Tree.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="title">Top feature importance scores</div>
+          <div class="desc">Higher score means the feature contributed more to tree splits.</div>
+          <div class="chart" style="height:340px"><canvas id="feature"></canvas></div>
+        </div>
+
+        <div class="grid features" style="margin-top:16px">
+          <div class="fcard">
+            <div class="rank">01 · 0.491050</div>
+            <h3>Attention required: high</h3>
+            <p>Highest importance in this model run.</p>
+          </div>
+          <div class="fcard">
+            <div class="rank">02 · 0.312232</div>
+            <h3>Hook strength</h3>
+            <p>Second-highest feature importance.</p>
+          </div>
+          <div class="fcard">
+            <div class="rank">03 · 0.135919</div>
+            <h3>Cognitive load</h3>
+            <p>Third-highest feature importance.</p>
+          </div>
+        </div>
+
+        <p class="small" style="margin-top:14px">Feature importance is not proof of causation. Confirm each feature is available at the time a real prediction would be made.</p>
+      </section>
+
+      <!-- ========== BUSINESS INSIGHTS ========== -->
+      <section id="business" class="section">
+        <div class="head">
+          <div>
+            <h2>Business insights</h2>
+            <p>How findings could support further OTT engagement analysis.</p>
+          </div>
+        </div>
+
+        <div class="grid features">
+          <div class="fcard">
+            <div class="icon">◎</div>
+            <h3>Identify potential risk</h3>
+            <p>Help analysts prioritize records that may need further investigation.</p>
+          </div>
+          <div class="fcard">
+            <div class="icon">↗</div>
+            <h3>Explore content signals</h3>
+            <p>Investigate attention requirement, hook strength and cognitive load patterns.</p>
+          </div>
+          <div class="fcard">
+            <div class="icon">✦</div>
+            <h3>Test retention ideas</h3>
+            <p>Evaluate content or recommendation changes with controlled experiments.</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <div class="title">Suggested workflow</div>
+
+          <div class="grid features" style="margin-top:13px">
+            <div class="fcard">
+              <h3>01 · Analyze</h3>
+              <p>Review high-risk predictions and related feature patterns.</p>
+            </div>
+            <div class="fcard">
+              <h3>02 · Experiment</h3>
+              <p>Test a measurable change rather than assuming cause and effect.</p>
+            </div>
+            <div class="fcard">
+              <h3>03 · Monitor</h3>
+              <p>Track performance on new data over time.</p>
+            </div>
+          </div>
+
+          <p class="small">This dashboard is a student-project demonstration, not connected to a live streaming service.</p>
+        </div>
+      </section>
+
+      <!-- ========== PREDICTION DEMO ========== -->
+      <section id="demo" class="section">
+        <div class="head">
+          <div>
+            <h2>Prediction demo</h2>
+            <p>Interactive interface mock-up for presentation purposes.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="note">
+            <b>Important:</b> This is a UI-only demonstration using illustrative rules, not a prediction from your trained Python model. A genuine prediction requires connecting a backend to the saved Scikit-learn pipeline.
+          </div>
+
+          <div class="formgrid">
+            <div class="field">
+              <label for="attention">Attention requirement</label>
+              <select id="attention">
+                <option>High</option>
+                <option selected>Medium</option>
+                <option>Low</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="hook">Hook strength</label>
+              <select id="hook">
+                <option>Low</option>
+                <option selected>Medium</option>
+                <option>High</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="load">Cognitive load</label>
+              <select id="load">
+                <option>High</option>
+                <option selected>Medium</option>
+                <option>Low</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="pauses">Pause count</label>
+              <input id="pauses" type="number" min="0" max="50" value="2">
+            </div>
+          </div>
+
+          <button class="btn" style="margin-top:18px" onclick="predictDemo()">Run demo prediction</button>
+
+          <div id="result" class="result">
+            <b>Illustrative result</b>
+            <p id="resultText" class="small"></p>
+            <span id="resultTag" class="tag"></span>
+            <p class="small">This output is not generated by the trained classifier and has no validated probability.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">STREAMSIGHT · DMBI CA 2 MINI PROJECT · Figures based on supplied notebook results</div>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
